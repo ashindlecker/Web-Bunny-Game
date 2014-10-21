@@ -1,0 +1,55 @@
+{ "backgroundcolor":"#55aaff",
+ "height":10,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10, 10, 10, 10, 3, 0, 10, 92, 92, 92, 153, 153, 153, 153, 0, 0, 153, 153, 153, 153, 153, 153, 153, 153, 0, 0, 153, 153, 153, 153, 153, 153, 153, 153, 1, 1, 153, 153, 153, 153, 153, 153, 153, 153, 1, 1, 153, 153, 153, 153, 153, 153, 153, 153, 1, 1, 153, 153, 153, 153],
+         "height":10,
+         "name":"tilemap",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "name":"Tile Layer 2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "orientation":"orthogonal",
+ "properties":
+    {
+     "backgroundColor":"#AAAAFF",
+     "level":"1",
+     "name":"Grass Lands",
+     "type":"normal",
+     "world":"1"
+    },
+ "tileheight":70,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/Tiles\/tiles_spritesheet.png",
+         "imageheight":936,
+         "imagewidth":862,
+         "margin":0,
+         "name":"tiles_spritesheet",
+         "properties":
+            {
+
+            },
+         "spacing":2,
+         "tileheight":70,
+         "tilewidth":70
+        }],
+ "tilewidth":70,
+ "version":1,
+ "width":10
+}
