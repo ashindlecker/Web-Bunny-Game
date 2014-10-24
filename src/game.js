@@ -4,12 +4,16 @@ var gameStates = new Array();
 
 function preload()
 {
-  //load assets
+  //entity assets
   game.load.image("player", "assets/Player/p1_stand.png");
-  game.load.image("tile0", "assets/Tiles/box.png");
-  game.load.image("tile1", "assets/Tiles/boxExplosiveAlt.png");
+
+	//tilesets
   game.load.tilemap("testmap", "assets/levels/testlevel.json", null, Phaser.Tilemap.TILED_JSON);
-  game.load.image("tiles", "assets/Tiles/tiles_spritesheet.png", null, Phaser.Tilemap.TILED_JSON);
+  game.load.image("tiles", "assets/Tiles/tiles_spritesheet.png");
+
+	//overworld assets
+	game.load.image("unlockedlevel", "assets/Tiles/boxCoin.png");
+	game.load.image("lockedlevel", "assets/Tiles/boxCoin_disabled.png");
 }
 
 function create()
@@ -17,7 +21,8 @@ function create()
   //start the game
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  addGameState(new playGameState(game));
+  //addGameState(new playGameState(game));
+	addGameState(new levelSelectState(game));
 }
 
 function update()

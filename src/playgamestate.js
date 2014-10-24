@@ -9,6 +9,7 @@ playGameState.prototype.ST_PLAY = 0;
 playGameState.prototype.ST_PAUSE = 1;
 playGameState.prototype.ST_WON = 2;
 playGameState.prototype.ST_LOSS = 3;
+playGameState.prototype.ST_CHANGINGSTATE = 4;
 
 //UI Renderables
 playGameState.prototype.stageClearFade = null;
@@ -17,6 +18,7 @@ playGameState.prototype.stageClearPressEnterText = null;
 playGameState.prototype.stageEnterNameText = null;
 playGameState.prototype.stageEnterLevelText = null;
 playGameState.prototype.stageUIOffset = {x: 0, y: 0, alpha: 1};
+playGameState.prototype.stageUITween = null;
 
 playGameState.prototype.moves = 0;
 
@@ -32,7 +34,10 @@ playGameState.prototype.init = function()
 {
   //setup game
   this.cursors = game.input.keyboard.createCursorKeys();
+
 	this.doubleJumpKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+	this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+
   this.game.world.setBounds(0,0,800,800);
   this.game.stage.backgroundColor = "#000000";
 
@@ -44,12 +49,13 @@ playGameState.prototype.init = function()
 	this.game.camera.follow(this.player.gameObject);
 
 	this.showLevelEnterUI();
+	console.log(this.map.layers[0].data[0][0]);
 }
 
 playGameState.prototype.update = function()
 {
 	gameState.prototype.update.call(this);
-
+	
 	//Input for player
 	if(this.state == this.ST_PLAY)
 	{
@@ -76,6 +82,14 @@ playGameState.prototype.update = function()
 			}
 		}
 	}
+	else if(this.state == this.ST_WON)
+	{
+		if(this.enterKey.isDown)
+		{
+			this.state = this.ST_CHANGINGSTATE;
+			//TODO: Change to level select state and unlock levels
+		}
+	}
 
 	//Check if player is in winzone and won
 
@@ -91,7 +105,7 @@ playGameState.prototype.update = function()
 
 playGameState.prototype.winGame = function()
 {
-	if(this.state == this.ST_WON)
+	if(this.state == this.ST_WON || this.state == this.ST_CHANGINGSTATE)
 		return false;	//Game has already been won
 
 	this.state = this.ST_WON;
@@ -112,12 +126,16 @@ playGameState.prototype.winGame = function()
 		this.stageClearText.alpha = 0;
 	}
 
+	if(this.stageUITween != null)
+		this.stageUITween._lastChild.stop();	//On the offchance the beginning "Show level" tween is running, stop it
+
 	this.stageUIOffset.alpha = 0;
 	this.stageUIOffset.x = 0;
 	this.stageUIOffset.y = 100;
 
 	this.game.world.bringToTop(this.stageEnterNameText);
 	this.game.world.bringToTop(this.stageEnterLevelText);
+
 
 	this.game.add.tween(this.stageClearFade).to( {alpha: 1}, 1000).start();
 	this.game.add.tween(this.stageClearText).to( {alpha: 1}, 1000).to({alpha: 1}, 1000).start();
@@ -185,9 +203,8 @@ playGameState.prototype.showLevelEnterUI = function()
 	this.stageEnterLevelText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y - 100, this.map.properties.world + "-" + this.map.properties.level, {align: "center", fill:"#FFFFFF" } );
 	this.stageEnterLevelText.anchor.setTo(0.5, 0);
 
-	this.game.add.tween(this.stageUIOffset).to( {y: 10, alpha: 1}, 1000, Phaser.Easing.Circular.InOut, true)
+	this.stageUITween = this.game.add.tween(this.stageUIOffset).to( {y: 10, alpha: 1}, 1000, Phaser.Easing.Circular.InOut, true)
 	.to( {y: 10}, 1000, Phaser.Easing.Circular.InOut, true)
 	.to( {x: -1000, alpha: 0}, 1000, Phaser.Easing.Circular.InOut, true); 
-
-	console.log(this.game);
+	
 }

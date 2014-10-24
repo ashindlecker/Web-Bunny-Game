@@ -17,10 +17,6 @@ gameState.prototype.render = function(){}
 
 gameState.prototype.close = function()
 {
-  for(var i = 0; i < this.objectGroup.length; i++)
-  {
-    this.objectGroup[i].kill();
-  }
 }
 
 gameState.prototype.addEntity = function(ent)
