@@ -1,6 +1,6 @@
 function playGameState(game, level)
 {
-  gameState.call(this, game);
+	gameState.call(this, game);
 	this.level = level;
 }
 
@@ -91,6 +91,9 @@ playGameState.prototype.update = function()
 			clearGameStates();
 			addGameState(new levelSelectState(this.game));
 			//TODO Unlock levels
+
+			unlockedLevels.push.apply(unlockedLevels, this.level.unlocks);
+			saveGame();
 		}
 	}
 

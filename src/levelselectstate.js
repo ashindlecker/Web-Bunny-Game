@@ -18,6 +18,14 @@ levelSelectState.prototype.init = function()
 
 	$.getJSON("assets/levels/levellist.json", function(json){
 		myself.levels = json.levels;
+
+		//apply local unlocked levels from localstorage
+		
+		for(var i = 0; i < unlockedLevels.length; i++)
+		{
+			myself.levels[unlockedLevels[i]].locked = false;
+		}
+
 		myself.completeInit();
 		myself.fullyLoaded = true;
 	});
@@ -38,12 +46,18 @@ levelSelectState.prototype.completeInit = function()
 
 	this.currentSelection = 0;
 
+	var curLevel = localStorage.getItem("currentLevel");
+	if(curLevel != null)
+	{
+		this.currentSelection = parseInt(curLevel);
+	}
+
 	this.levelTiles = this.game.add.group();
 
 	for(var i = 0; i < this.levels.length; i++)
 	{
 		var tile = this.game.add.sprite(this.levels[i].x,this.levels[i].y,"unlockedlevel");
-		if(this.levels[i].locked)
+		if(this.levels[i].locked == true)
 		{
 			tile.loadTexture("lockedlevel");
 		}
@@ -53,7 +67,7 @@ levelSelectState.prototype.completeInit = function()
 
 	this.selectCursor.bringToTop();
 
-	this.moveTo(0);
+	this.moveTo(this.currentSelection);
 }
 
 levelSelectState.prototype.update = function()
@@ -85,7 +99,6 @@ levelSelectState.prototype.update = function()
 		{
 			//Select level and switch state
 			clearGameStates();
-			console.log(this.levels[this.currentSelection]);
 			addGameState(new playGameState(this.game, this.levels[this.currentSelection]));
 		}
 	}
@@ -97,7 +110,7 @@ levelSelectState.prototype.update = function()
 
 levelSelectState.prototype.moveTo = function(id)
 {
-	if(!this.allowMovement)
+	if(!this.allowMovement || this.levels[id].locked != false)
 	{
 		return false;
 	}
@@ -110,7 +123,9 @@ levelSelectState.prototype.moveTo = function(id)
 	{
 		this.allowMovement = true;
 		this.currentSelection = id;
+		localStorage.setItem("currentLevel", this.currentSelection);
 	}, this);
+
 
 	return true;
 }

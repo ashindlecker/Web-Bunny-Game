@@ -1,7 +1,7 @@
 
 var game = new Phaser.Game(800,600, Phaser.CANVAS, 'game', {preload: preload, create: create, update: update, render: render});
 var gameStates = new Array();
-
+var unlockedLevels = [];	//list of unlocked levels
 function preload()
 {
   //entity assets
@@ -17,7 +17,16 @@ function preload()
 	//overworld assets
 	game.load.image("unlockedlevel", "assets/Tiles/boxCoin.png");
 	game.load.image("lockedlevel", "assets/Tiles/boxCoin_disabled.png");
+	
+	unlockedLevels = JSON.parse(localStorage.getItem("unlocked"));
 
+	console.log(unlockedLevels);
+	
+	if(unlockedLevels == null)
+	{
+		unlockedLevels = [];
+	}
+	console.log(unlockedLevels);
 }
 
 function create()
@@ -60,4 +69,10 @@ function clearGameStates()
 		gameStates[i].close();
 	}
 	gameStates = [];
+}
+
+function saveGame()
+{
+	//save unlocked levels
+	localStorage.setItem("unlocked", JSON.stringify(unlockedLevels));
 }
