@@ -19,14 +19,11 @@ function preload()
 	game.load.image("lockedlevel", "assets/Tiles/boxCoin_disabled.png");
 	
 	unlockedLevels = JSON.parse(localStorage.getItem("unlocked"));
-
-	console.log(unlockedLevels);
 	
 	if(unlockedLevels == null)
 	{
 		unlockedLevels = [];
 	}
-	console.log(unlockedLevels);
 }
 
 function create()
