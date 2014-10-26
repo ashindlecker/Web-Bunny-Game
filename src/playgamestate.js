@@ -1,6 +1,7 @@
-function playGameState(game)
+function playGameState(game, level)
 {
   gameState.call(this, game);
+	this.level = level;
 }
 
 playGameState.prototype = Object.create(gameState.prototype);
@@ -44,12 +45,11 @@ playGameState.prototype.init = function()
 	this.state = this.ST_PLAY;
 	this.moves = 0;
 
-  this.setMap("testmap")
+  this.setMap(this.level.mapKey)
 	this.player = this.addEntity(new character(this.tilemap));
 	this.game.camera.follow(this.player.gameObject);
 
 	this.showLevelEnterUI();
-	console.log(this.map.layers[0].data[0][0]);
 }
 
 playGameState.prototype.update = function()
@@ -87,7 +87,10 @@ playGameState.prototype.update = function()
 		if(this.enterKey.isDown)
 		{
 			this.state = this.ST_CHANGINGSTATE;
-			//TODO: Change to level select state and unlock levels
+			//Change to level select state
+			clearGameStates();
+			addGameState(new levelSelectState(this.game));
+			//TODO Unlock levels
 		}
 	}
 
@@ -197,14 +200,21 @@ playGameState.prototype.showLevelEnterUI = function()
 	this.stageUIOffset.y = -100;
 	this.stageUIOffset.alpha = 0;
 
-	this.stageEnterNameText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y - 100, this.map.properties.name, {align: "center", fill:"#FFFFFF" } );
+	this.stageEnterNameText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y - 100, this.level.name, {align: "center", fill:"#FFFFFF" } );
 	this.stageEnterNameText.anchor.setTo(0.5, 0);
 
-	this.stageEnterLevelText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y - 100, this.map.properties.world + "-" + this.map.properties.level, {align: "center", fill:"#FFFFFF" } );
+	this.stageEnterLevelText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y - 100, this.level.mapKey, {align: "center", fill:"#FFFFFF" } );
 	this.stageEnterLevelText.anchor.setTo(0.5, 0);
 
 	this.stageUITween = this.game.add.tween(this.stageUIOffset).to( {y: 10, alpha: 1}, 1000, Phaser.Easing.Circular.InOut, true)
 	.to( {y: 10}, 1000, Phaser.Easing.Circular.InOut, true)
 	.to( {x: -1000, alpha: 0}, 1000, Phaser.Easing.Circular.InOut, true); 
-	
+}
+
+playGameState.prototype.close = function()
+{
+	gameState.prototype.close.call(this);
+
+	this.game.world.removeAll();
+	this.game.tweens.removeAll();
 }

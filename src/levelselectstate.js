@@ -8,6 +8,7 @@ function levelSelectState(game)
 levelSelectState.prototype = Object.create(gameState.prototype);
 levelSelectState.prototype.allowMovement = true;	//Allow input to switch levels
 levelSelectState.prototype.fullyLoaded = false;	//Must do async loading first
+levelSelectState.prototype.allowSelect = false;	//Must do async loading first
 
 levelSelectState.prototype.init = function()
 {
@@ -80,7 +81,17 @@ levelSelectState.prototype.update = function()
 	}
 	if(this.selectKey.isDown)
 	{
-		//TODO Select level
+		if(this.allowSelect && this.allowMovement)
+		{
+			//Select level and switch state
+			clearGameStates();
+			console.log(this.levels[this.currentSelection]);
+			addGameState(new playGameState(this.game, this.levels[this.currentSelection]));
+		}
+	}
+	else
+	{
+		this.allowSelect = true;
 	}
 }
 
@@ -94,12 +105,11 @@ levelSelectState.prototype.moveTo = function(id)
 	this.allowMovement = false;
 
 	var tween = this.game.add.tween(this.selectCursor);
-	tween.to({x: this.levels[id].x, y: this.levels[id].y}).start();
+	tween.to({x: this.levels[id].x, y: this.levels[id].y}, 200).start();
 	tween.onComplete.add(function()
 	{
 		this.allowMovement = true;
 		this.currentSelection = id;
-		console.log(this);
 	}, this);
 
 	return true;
@@ -133,4 +143,12 @@ levelSelectState.prototype.moveDown = function()
 		return false;
 
 	return this.moveTo(this.levels[this.currentSelection].pathDown);
+}
+
+levelSelectState.prototype.close = function()
+{
+	gameState.prototype.close.call(this);
+
+	this.selectCursor.kill();
+	this.levelTiles.removeAll();
 }

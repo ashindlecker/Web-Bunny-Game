@@ -8,12 +8,16 @@ function preload()
   game.load.image("player", "assets/Player/p1_stand.png");
 
 	//tilesets
-  game.load.tilemap("testmap", "assets/levels/testlevel.json", null, Phaser.Tilemap.TILED_JSON);
   game.load.image("tiles", "assets/Tiles/tiles_spritesheet.png");
+
+	//maps
+  game.load.tilemap("1-1", "assets/levels/1-1.json", null, Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap("1-2", "assets/levels/1-2.json", null, Phaser.Tilemap.TILED_JSON);
 
 	//overworld assets
 	game.load.image("unlockedlevel", "assets/Tiles/boxCoin.png");
 	game.load.image("lockedlevel", "assets/Tiles/boxCoin_disabled.png");
+
 }
 
 function create()
@@ -21,7 +25,7 @@ function create()
   //start the game
   game.physics.startSystem(Phaser.Physics.ARCADE);
 
-  //addGameState(new playGameState(game));
+  //addGameState(new playGameState(game, "1-2"));
 	addGameState(new levelSelectState(game));
 }
 
@@ -46,4 +50,14 @@ function addGameState(state)
 {
   gameStates.push(state);
   state.init();
+}
+
+function clearGameStates()
+{
+	for(var i = 0; i < gameStates.length; i++)
+	{
+		if(!gameStates[i]) continue;
+		gameStates[i].close();
+	}
+	gameStates = [];
 }
