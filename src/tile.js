@@ -1,5 +1,6 @@
 function tile(tileLayerData, x, y, map)
 {
+	this.layerData = tileLayerData;
 	this.map = map;
 	this.x = x;
 	this.y = y;
@@ -35,6 +36,20 @@ tile.prototype.indexToTypeDictionary = {
 	"13": [tile.prototype.BREAKABLE, true]
 };
 
+tile.prototype.indexFromType = function(type)
+{
+	for(var key in this.indexToTypeDictionary)
+	{
+		var array = this.indexToTypeDictionary[key];
+		if(array[0] == type)
+		{
+			return parseInt(key);
+		}
+	}
+
+	return -1;
+}
+
 tile.prototype.onLanding = function(character, velocity)
 {
 };
@@ -45,7 +60,6 @@ tile.prototype.onLeave = function(character, velocity)
 	{
 		case this.BREAKABLE:
 		//Break tile
-		this.solid = false;
 		this.changeType(this.AIR);
 		break;
 	}
@@ -54,6 +68,7 @@ tile.prototype.onLeave = function(character, velocity)
 tile.prototype.changeType = function(type)
 {
 	this.type = type;
-
-	this.map.replace(13, -1, this.x, this.y, 1, 1, "tilemap");
+	var newIndex = this.indexFromType(this.type)
+	this.solid = this.indexToTypeDictionary[newIndex.toString()][1];
+	this.map.replace(this.layerData.index, newIndex, this.x, this.y, 1, 1, "tilemap");
 }
