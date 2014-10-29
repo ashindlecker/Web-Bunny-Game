@@ -39,6 +39,9 @@ levelSelectState.prototype.completeInit = function()
 	this.selectCursor.scale.x = .4;
 	this.selectCursor.scale.y = .4;
 	
+	this.game.world.setBounds(0, 0, 1000, 1000);
+	this.game.camera.follow(this.selectCursor);
+
 	this.allowMovement = true;
 
   this.cursors = game.input.keyboard.createCursorKeys();
@@ -46,11 +49,17 @@ levelSelectState.prototype.completeInit = function()
 
 	this.currentSelection = 0;
 
+	this.selectedLevelTitle = this.game.add.text(this.game.width / 2, 20, "NA", {fill: "#FFFFFF"});
+	this.selectedLevelTitle.anchor.set(.5,.5);
+	this.selectedLevelTitle.fixedToCamera = true;
+
 	var curLevel = localStorage.getItem("currentLevel");
 	if(curLevel != null)
 	{
 		this.currentSelection = parseInt(curLevel);
 	}
+
+	this.updateTitleText();
 
 	this.levelTiles = this.game.add.group();
 
@@ -124,6 +133,7 @@ levelSelectState.prototype.moveTo = function(id)
 		this.allowMovement = true;
 		this.currentSelection = id;
 		localStorage.setItem("currentLevel", this.currentSelection);
+		this.updateTitleText();
 	}, this);
 
 
@@ -166,4 +176,10 @@ levelSelectState.prototype.close = function()
 
 	this.selectCursor.kill();
 	this.levelTiles.removeAll();
+	this.selectedLevelTitle.destroy();
+}
+
+levelSelectState.prototype.updateTitleText = function()
+{
+	this.selectedLevelTitle.text = this.levels[this.currentSelection].name;
 }

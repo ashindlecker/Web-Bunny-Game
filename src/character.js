@@ -39,6 +39,8 @@ character.prototype.moveTo = function(pos)
 		return false;
 	}
 
+	this.tilemap.getTile(this.tilePos.x, this.tilePos.y + 1).tile.onLeave(this, new point(pos.x - this.tilePos.x, pos.y - this.tilePos.y));
+
 	var tileMovingTo = this.tilemap.getTile(pos.x, pos.y);
 	if(tileMovingTo)
 	{
@@ -93,7 +95,9 @@ character.prototype.moveTo = function(pos)
 	tween._lastChild.onComplete.add(function()
 	{
 		this.moveState = 0;
+		var tempPos = this.tilePos;
 		this.tilePos = this.destTile;
+		this.tilemap.getTile(this.tilePos.x, this.tilePos.y + 1).tile.onLanding(this, new point(this.destTile.x - tempPos.x,this.destTile.y - tempPos.y));
 	}, this);
 	
 	return true;

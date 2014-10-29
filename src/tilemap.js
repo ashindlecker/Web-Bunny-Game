@@ -15,7 +15,7 @@ function tilemap(tiledmap)
 	{
 		for(var x = 0; x < this.tiles[y].length; x++)
 		{
-			this.tiles[y][x].tile = new tile(this.tiles[y][x], x, y);
+			this.tiles[y][x].tile = new tile(this.tiles[y][x], x, y, tiledmap);
 		}
 	}
 }
