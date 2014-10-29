@@ -31,9 +31,7 @@ function preload()
 function create()
 {
   //start the game
-  //game.physics.startSystem(Phaser.Physics.ARCADE);
-
-  //addGameState(new playGameState(game, "1-2"));
+  game.physics.startSystem(Phaser.Physics.ARCADE);
 	addGameState(new levelSelectState(game));
 }
 

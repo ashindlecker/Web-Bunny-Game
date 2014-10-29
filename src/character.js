@@ -11,6 +11,7 @@ function character(tilemap, characterType)
 	this.tilePos = new point(0,0);
 	this.destTile= new point(0,0);
 	this.characterType = (characterType === undefined) ? 0 : characterType;
+	this.dead = false;
 }
 
 character.prototype = Object.create(entity.prototype);
@@ -134,6 +135,11 @@ character.prototype.update = function()
 		}
 
 		this.moveTo(new point(belowTile.x, belowTile.y));
+	}
+	else if(belowTile == null)
+	{
+		//player has fallen off the map
+		this.dead = true;
 	}
 }
 

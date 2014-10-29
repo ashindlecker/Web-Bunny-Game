@@ -1,8 +1,9 @@
-function pauseState(game, title, gameLevel)
+function pauseState(game, title, gameLevel, noContinue)
 {
 	gameState.call(this, game);
 	this.title = title;
 	this.level = gameLevel;
+	this.noContinue = noContinue;
 }
 
 pauseState.prototype = Object.create(gameState.prototype);
@@ -29,15 +30,18 @@ pauseState.prototype.init = function()
 	this.blackout.alpha = .8;
 
 	this.optionsText = [];
-	this.optionsText.push(this.game.add.text(this.game.width / 2, 10, "Continue", {fill:"#FFFFFF"}));
+
+	if(this.noContinue == false)
+	{
+		this.optionsText.push(this.game.add.text(this.game.width / 2, 10, "Continue", {fill:"#FFFFFF"}));
+		this.optionsText[this.optionsText.length - 1].type = "continue";
+	}
+
 	this.optionsText.push(this.game.add.text(this.game.width / 2, 10, "Restart", {fill:"#FFFFFF"}));
+	this.optionsText[this.optionsText.length - 1].type = "restart";
+
 	this.optionsText.push(this.game.add.text(this.game.width / 2, 10, "Back to Level Select", {fill:"#FFFFFF"}));
-
-	this.optionsText[0].type = "continue";
-	this.optionsText[1].type = "restart";
-	this.optionsText[2].type = "levels";
-
-
+	this.optionsText[this.optionsText.length - 1].type = "levels";
 
 	for(var i = 0; i < this.optionsText.length; i++)
 	{

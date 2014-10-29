@@ -34,6 +34,7 @@ playGameState.prototype.goldStandard = -1;
 playGameState.prototype.init = function()
 {
   //setup game
+	this.stageUIOffset = {x: 0, y: 0, alpha: 1};
   this.cursors = game.input.keyboard.createCursorKeys();
 
 	this.doubleJumpKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -49,6 +50,11 @@ playGameState.prototype.init = function()
   this.setMap(this.level.mapKey)
 	this.player = this.addEntity(new character(this.tilemap));
 	this.game.camera.follow(this.player.gameObject);
+
+	this.deathEmitter = this.game.add.emitter(0,0, 100);
+	this.deathEmitter.makeParticles("lockedlevel");
+	this.deathEmitter.setAlpha(1, 0, 5000);
+	this.deathEmitter.setScale(.3, 0, .3, 0, 5000);
 
 	this.showLevelEnterUI();
 }
@@ -95,7 +101,19 @@ playGameState.prototype.update = function()
 
 		if(this.pauseKey.isDown)
 		{
-			addGameState(new pauseState(this.game, "Paused", this.level));
+			addGameState(new pauseState(this.game, "Paused", this.level, false));
+		}
+
+		if(this.player.dead)
+		{
+			addGameState(new pauseState(this.game, "Aw too bad!", this.level, true));
+			if(this.player.gameObject.alive)
+			{
+				this.deathEmitter.x = this.player.gameObject.x + this.player.gameObject.width / 2;
+				this.deathEmitter.y = this.player.gameObject.y + this.player.gameObject.height / 2;;
+				this.deathEmitter.start(true, 5000, null, 10);
+				this.player.gameObject.kill();
+			}
 		}
 	}
 	else if(this.state == this.ST_WON)
@@ -106,8 +124,7 @@ playGameState.prototype.update = function()
 			//Change to level select state
 			clearGameStates();
 			addGameState(new levelSelectState(this.game));
-			//TODO Unlock levels
-
+			//Unlock levels
 			unlockedLevels.push.apply(unlockedLevels, this.level.unlocks);
 			saveGame();
 		}
