@@ -8,7 +8,7 @@ function levelSelectState(game)
 levelSelectState.prototype = Object.create(gameState.prototype);
 levelSelectState.prototype.allowMovement = true;	//Allow input to switch levels
 levelSelectState.prototype.fullyLoaded = false;	//Must do async loading first
-levelSelectState.prototype.allowSelect = false;	//Must do async loading first
+levelSelectState.prototype.allowSelect = false;
 
 levelSelectState.prototype.init = function()
 {
@@ -34,13 +34,14 @@ levelSelectState.prototype.init = function()
 levelSelectState.prototype.completeInit = function()
 {
 
+	this.game.world.setBounds(0, 0, 1000, 1000);
+	this.game.camera.follow(this.selectCursor);
+	this.game.camera.x = 0;
+	this.game.camera.y = 0;
 	this.selectCursor = this.game.add.sprite(0,0, "player");	//used to indicate what level the player is over
 	this.selectCursor.anchor.set(.5,.5);
 	this.selectCursor.scale.x = .4;
 	this.selectCursor.scale.y = .4;
-	
-	this.game.world.setBounds(0, 0, 1000, 1000);
-	this.game.camera.follow(this.selectCursor);
 
 	this.allowMovement = true;
 

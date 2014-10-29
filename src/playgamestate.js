@@ -38,6 +38,7 @@ playGameState.prototype.init = function()
 
 	this.doubleJumpKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 	this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+	this.pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
   this.game.world.setBounds(0,0,800,800);
   this.game.stage.backgroundColor = "#000000";
@@ -55,7 +56,17 @@ playGameState.prototype.init = function()
 playGameState.prototype.update = function()
 {
 	gameState.prototype.update.call(this);
-	
+	//Check if player is in winzone and won
+
+	var currentTile = this.tilemap.getTile(this.player.tilePos.x, this.player.tilePos.y);
+	if(currentTile)
+	{
+		if(currentTile.tile.type == 2) //is this a winzone tile
+		{
+			this.winGame();
+		}
+	}
+
 	//Input for player
 	if(this.state == this.ST_PLAY)
 	{
@@ -81,6 +92,11 @@ playGameState.prototype.update = function()
 				if(this.player.move(new point(1, 0))) this.moves++;
 			}
 		}
+
+		if(this.pauseKey.isDown)
+		{
+			addGameState(new pauseState(this.game, "Paused", this.level));
+		}
 	}
 	else if(this.state == this.ST_WON)
 	{
@@ -94,17 +110,6 @@ playGameState.prototype.update = function()
 
 			unlockedLevels.push.apply(unlockedLevels, this.level.unlocks);
 			saveGame();
-		}
-	}
-
-	//Check if player is in winzone and won
-
-	var currentTile = this.tilemap.getTile(this.player.tilePos.x, this.player.tilePos.y);
-	if(currentTile)
-	{
-		if(currentTile.tile.type == 2) //is this a winzone tile
-		{
-			this.winGame();
 		}
 	}
 }

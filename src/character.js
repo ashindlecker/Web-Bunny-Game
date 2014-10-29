@@ -26,6 +26,7 @@ character.prototype.onAdd = function(game)
 		default:
 		case 0:
 			this.gameObject = this.game.add.sprite(0, 0, "player");
+			this.gameObject.anchor.set(0,.1);
 			//this.game.physics.enable(this.gameObject, Phaser.Physics.ARCADE);
 		break;
 	}
@@ -39,12 +40,6 @@ character.prototype.moveTo = function(pos)
 		return false;
 	}
 
-	var tile = this.tilemap.getTile(this.tilePos.x, this.tilePos.y + 1);
-	if(tile)
-	{
-		tile.tile.onLeave(this, new point(pos.x - this.tilePos.x, pos.y - this.tilePos.y));
-	}
-
 	var tileMovingTo = this.tilemap.getTile(pos.x, pos.y);
 	if(tileMovingTo)
 	{
@@ -56,6 +51,12 @@ character.prototype.moveTo = function(pos)
 	else
 	{
 		return false;	//Tile is out of bounds
+	}
+
+	var tile = this.tilemap.getTile(this.tilePos.x, this.tilePos.y + 1);
+	if(tile)
+	{
+		tile.tile.onLeave(this, new point(pos.x - this.tilePos.x, pos.y - this.tilePos.y));
 	}
 
 	this.destTile = pos;

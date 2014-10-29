@@ -13,6 +13,8 @@ function preload()
 	//maps
   game.load.tilemap("1-1", "assets/levels/1-1.json", null, Phaser.Tilemap.TILED_JSON);
   game.load.tilemap("1-2", "assets/levels/1-2.json", null, Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap("1-3", "assets/levels/1-3.json", null, Phaser.Tilemap.TILED_JSON);
+  //game.load.tilemap("1-2", "assets/levels/1-2.json", null, Phaser.Tilemap.TILED_JSON);
 
 	//overworld assets
 	game.load.image("unlockedlevel", "assets/Tiles/boxCoin.png");
@@ -29,7 +31,7 @@ function preload()
 function create()
 {
   //start the game
-  game.physics.startSystem(Phaser.Physics.ARCADE);
+  //game.physics.startSystem(Phaser.Physics.ARCADE);
 
   //addGameState(new playGameState(game, "1-2"));
 	addGameState(new levelSelectState(game));
@@ -39,7 +41,8 @@ function update()
 {
   for(var i = 0; i < gameStates.length; i++)
   {
-    gameStates[i].update();
+		if(gameStates[i])
+    	gameStates[i].update();
   }
 }
 
@@ -48,7 +51,8 @@ function render()
   game.debug.cameraInfo(game.camera, 32, 32);
   for(var i = 0; i < gameStates.length; i++)
   {
-    gameStates[i].render();
+		if(gameStates[i])
+   		gameStates[i].render();
   }
 }
 
@@ -66,6 +70,17 @@ function clearGameStates()
 		gameStates[i].close();
 	}
 	gameStates = [];
+}
+
+function removeGameState(state)
+{
+	for(var i = 0; i < gameStates.length; i++)
+	{
+		if(!gameStates[i]) continue;
+		
+		if(gameStates[i] == state)
+			gameStates[i] = null;
+	}
 }
 
 function saveGame()
