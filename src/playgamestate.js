@@ -172,11 +172,46 @@ playGameState.prototype.winGame = function()
 	{
 		if(this.stageClearPressEnterText == null)
 		{
-			this.stageClearPressEnterText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y + 300, "PRESS ENTER TO CONTINUE", {align: "center", fill:"#FFFFFF" } );
+			this.stageClearPressEnterText = this.game.add.text(this.game.camera.x + this.game.width / 2, this.game.camera.y + 500, "PRESS ENTER TO CONTINUE", {align: "center", fill:"#FFFFFF" } );
 			this.stageClearPressEnterText.anchor.setTo(.5, 0);
 		}
 	}, this);
 	tween.start();
+
+	this.startRewardTimer = this.game.time.events.add(Phaser.Timer.SECOND * 1, function()
+	{
+		this.moveCounterTitle = this.game.add.text(this.game.width / 2, 220, "Moves", {fill: "#FFFFFF" } );
+		this.moveCounterTitle.fixedToCamera = true;
+		this.moveCounterTitle.anchor.set(.5,.5);
+
+		this.moveCounterText = this.game.add.text(this.game.width / 2, 250, "0", {fill: "#FFFFFF" } );
+		this.moveCounterText.fixedToCamera = true;
+		this.moveCounterText.anchor.set(.5,.5);
+		this.rewardTimer = this.game.time.events.repeat(150 / (this.moves/10), this.moves, function()
+		{
+			this.moveCounterText.text = parseInt(this.moveCounterText.text) + 1;
+			if(parseInt(this.moveCounterText.text) >= this.moves)
+			{
+				console.log(this.level);
+				if(this.moves <= this.level.gold)
+				{
+					this.rewardSprite = this.game.add.sprite(this.game.width / 2, 300, "gold");
+				}
+				else if(this.moves <= this.level.silver)
+				{
+					this.rewardSprite = this.game.add.sprite(this.game.width / 2, 300, "silver");
+				}
+				else
+				{
+					this.rewardSprite = this.game.add.sprite(this.game.width / 2, 300, "bronze");
+				}
+
+				this.rewardSprite.fixedToCamera = true;
+				this.rewardSprite.anchor.set(.5, 0);
+				this.rewardSprite.scale.set(.5,.5);
+			}
+		}, this);
+	}, this);
 }
 
 playGameState.prototype.render = function()
@@ -242,4 +277,10 @@ playGameState.prototype.close = function()
 
 	this.game.world.removeAll();
 	this.game.tweens.removeAll();
+
+	if(this.startRewardTimer)
+		this.game.time.events.remove(this.startRewardTimer);
+
+	if(this.rewardTimer)
+		this.game.time.events.remove(this.rewardTimer);
 }

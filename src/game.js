@@ -19,6 +19,11 @@ function preload()
 	//overworld assets
 	game.load.image("unlockedlevel", "assets/Tiles/boxCoin.png");
 	game.load.image("lockedlevel", "assets/Tiles/boxCoin_disabled.png");
+
+	//reward assets
+	game.load.image("bronze", "assets/rewards/bronze.png");
+	game.load.image("silver", "assets/rewards/silver.png");
+	game.load.image("gold", "assets/rewards/gold.png");
 	
 	unlockedLevels = JSON.parse(localStorage.getItem("unlocked"));
 	
@@ -33,6 +38,8 @@ function create()
   //start the game
   game.physics.startSystem(Phaser.Physics.ARCADE);
 	addGameState(new levelSelectState(game));
+
+	console.log(game);
 }
 
 function update()
